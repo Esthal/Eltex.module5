@@ -13,7 +13,12 @@ dynamicS:
 	gcc main.c -o main -L. -lcalc
 	LD_LIBRARY_PATH=${PWD}:${LD_LIBRARY_PATH} ./main 23 7
 
-
+dynamic:
+	gcc -fPIC -c modulo.c
+	gcc -fPIC -c devisible.c
+	gcc -shared modulo.o devisible.o -o libcalc.so
+	gcc mainD.c -o main -L. -ldl
+	LD_LIBRARY_PATH=${PWD}:${LD_LIBRARY_PATH} ./main 43 7
 
 clean:
 	rm main modulo.o devisible.o libcalc.*
