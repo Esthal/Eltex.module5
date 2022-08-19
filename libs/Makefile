@@ -2,7 +2,7 @@
 
 static: my_lib.h modulo.o devisible.o main.c
 	ar rc libcalc.a modulo.o devisible.o
-	gcc main.c -o main -L. -lcalc
+	gcc main.c -o main -L. -static -lcalc
 	./main 23 7
 
 dynamicS: my_lib.h main.c libcalc.so
