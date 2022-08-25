@@ -35,7 +35,6 @@ static ssize_t foo_show(struct kobject *kobj, struct kobj_attribute *attr, char 
 static ssize_t foo_store(struct kobject *kobj, struct kobj_attribute *attr, const char *buf, size_t count)
 {
         sscanf(buf, "%du", &keyboard_num);
-        keyboard_num = keyboard_num;
         return count;
 }
  
