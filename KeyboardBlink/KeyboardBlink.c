@@ -17,41 +17,39 @@
 MODULE_LICENSE("GPL");
 struct timer_list my_timer;
 struct tty_driver *my_driver;
+static struct kobject *example_kobject;
 static int _kbledstatus = 0;
-static int test = 7;// cod
+static int keyboard_num = 7;// cod
 #define BLINK_DELAY   HZ/5
 #define ALL_LEDS_ON   0x07
 #define RESTORE_LEDS  0xFF
 
 
 
-
-static struct kobject *example_kobject;
-static int sys_num = 7;
  
 static ssize_t foo_show(struct kobject *kobj, struct kobj_attribute *attr, char *buf)
 {
-        return sprintf(buf, "%d\n", sys_num);
+        return sprintf(buf, "%d\n", keyboard_num);
 }
  
 static ssize_t foo_store(struct kobject *kobj, struct kobj_attribute *attr, const char *buf, size_t count)
 {
-        sscanf(buf, "%du", &sys_num);
-        test = sys_num;
+        sscanf(buf, "%du", &keyboard_num);
+        keyboard_num = keyboard_num;
         return count;
 }
  
  
-static struct kobj_attribute foo_attribute =__ATTR(sys_num, 0660, foo_show, foo_store);
+static struct kobj_attribute foo_attribute =__ATTR(keyboard_num, 0660, foo_show, foo_store);
 
 static void my_timer_func(struct timer_list *ptr)
 {
         int *pstatus = &_kbledstatus;
         
-        if (*pstatus == test)
+        if (*pstatus == keyboard_num)
                 *pstatus = RESTORE_LEDS;
         else
-                *pstatus = test;
+                *pstatus = keyboard_num;
 
         (my_driver->ops->ioctl) (vc_cons[fg_console].d->port.tty, KDSETLED,
                             *pstatus);
