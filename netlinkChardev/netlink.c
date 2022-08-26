@@ -24,7 +24,7 @@ static void hello_nl_recv_msg(struct sk_buff *skb)
 
     nlh = (struct nlmsghdr *)skb->data;
     printk(KERN_INFO "Netlink received msg payload: %s\n", (char *)nlmsg_data(nlh));
-    pid = nlh->nlmsg_pid; /*pid of sending process */
+    pid = nlh->nlmsg_pid;
 
     skb_out = nlmsg_new(msg_size, 0);
 
@@ -36,7 +36,7 @@ static void hello_nl_recv_msg(struct sk_buff *skb)
 
     }
     nlh = nlmsg_put(skb_out, 0, 0, NLMSG_DONE, msg_size, 0);
-    NETLINK_CB(skb_out).dst_group = 0; /* not in mcast group */
+    NETLINK_CB(skb_out).dst_group = 0;
         strncpy(nlmsg_data(nlh), msg, msg_size);
 
     res = nlmsg_unicast(nl_sk, skb_out, pid);
@@ -55,9 +55,6 @@ static int __init hello_init(void)
 
     printk("Entering: %s\n", __FUNCTION__);
     nl_sk = netlink_kernel_create(&init_net, NETLINK_USER, &cfg);
-
-    // nl_sk = netlink_kernel_create(&init_net, NETLINK_USER, 0, hello_nl_recv_msg,
-    //                              NULL, THIS_MODULE);
     if (!nl_sk)
     {
         printk(KERN_ALERT "Error creating socket.\n");

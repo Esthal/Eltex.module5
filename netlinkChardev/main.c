@@ -6,7 +6,7 @@
 
 #define NETLINK_USER 31
 
-#define MAX_PAYLOAD 1024 /* maximum payload size*/
+#define MAX_PAYLOAD 1024
 struct sockaddr_nl src_addr, dest_addr;
 struct nlmsghdr *nlh = NULL;
 struct iovec iov;
@@ -21,15 +21,14 @@ void main()
 
     memset(&src_addr, 0, sizeof(src_addr));
     src_addr.nl_family = AF_NETLINK;
-    src_addr.nl_pid = getpid(); /* self pid */
+    src_addr.nl_pid = getpid();
 
     bind(sock_fd, (struct sockaddr *)&src_addr, sizeof(src_addr));
 
     memset(&dest_addr, 0, sizeof(dest_addr));
-    memset(&dest_addr, 0, sizeof(dest_addr));
     dest_addr.nl_family = AF_NETLINK;
-    dest_addr.nl_pid = 0; /* For Linux Kernel */
-    dest_addr.nl_groups = 0; /* unicast */
+    dest_addr.nl_pid = 0;
+    dest_addr.nl_groups = 0;
 
     nlh = (struct nlmsghdr *)malloc(NLMSG_SPACE(MAX_PAYLOAD));
     memset(nlh, 0, NLMSG_SPACE(MAX_PAYLOAD));
@@ -50,7 +49,6 @@ void main()
     sendmsg(sock_fd, &msg, 0);
     printf("Waiting for message from kernel\n");
 
-    /* Read message from kernel */
     recvmsg(sock_fd, &msg, 0);
     printf("Received message payload: %s\n", NLMSG_DATA(nlh));
     close(sock_fd);
